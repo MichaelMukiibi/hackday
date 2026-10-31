@@ -1,0 +1,86 @@
+{
+  "inspection_date": "2026-10-31",
+  "artifact": "adapted-alpaca.tar.gz",
+  "bytes": 559378,
+  "sha256": "cf7fc8dd31eab371f41dff7d11d9ab51cff7b314988c64ba6573a6c4b2429156",
+  "parquet_parts": [
+    {
+      "file": "part-000000.parquet",
+      "rows": 100,
+      "columns": [
+        "instruction",
+        "output",
+        "enhanced_prompt",
+        "enhanced_completion",
+        "input",
+        "original_context",
+        "text"
+      ],
+      "sha256": "5f4921cd003ed34b6840d5b8840617db7b6d39136b088de111a8c5789508fa99"
+    },
+    {
+      "file": "part-000001.parquet",
+      "rows": 100,
+      "columns": [
+        "instruction",
+        "output",
+        "enhanced_prompt",
+        "enhanced_completion",
+        "input",
+        "original_context",
+        "text"
+      ],
+      "sha256": "8535c2c6c2ccf86b3f9516aedc5f7128ec9dfaf43e0b9489dd53e6411f6dd966"
+    },
+    {
+      "file": "part-000002.parquet",
+      "rows": 100,
+      "columns": [
+        "instruction",
+        "output",
+        "enhanced_prompt",
+        "enhanced_completion",
+        "input",
+        "original_context",
+        "text"
+      ],
+      "sha256": "053f5bdc3334708427dda1104df572ff5b98b897e94512f373a9c7d004cfb21c"
+    },
+    {
+      "file": "part-000003.parquet",
+      "rows": 100,
+      "columns": [
+        "instruction",
+        "output",
+        "enhanced_prompt",
+        "enhanced_completion",
+        "input",
+        "original_context",
+        "text"
+      ],
+      "sha256": "f206d2d0f3bd31527e7f4132a5793a15a44a6cbe891c928fce567b1ebd079da6"
+    },
+    {
+      "file": "part-000004.parquet",
+      "rows": 97,
+      "columns": [
+        "instruction",
+        "output",
+        "enhanced_prompt",
+        "enhanced_completion",
+        "input",
+        "original_context",
+        "text"
+      ],
+      "sha256": "aa36eb957ab954a06a071a0a8adfd5014f166b3709915dd0fb18e3fa80398a66"
+    }
+  ],
+  "total_rows": 497,
+  "field_checks": {
+    "enhanced_prompt_nonempty": 0,
+    "enhanced_completion_nonempty": 497,
+    "changed_prompt_rows": 0,
+    "changed_completion_rows": 483
+  },
+  "provenance_note": "Local inspection of the existing repository export. No new Adaption run was started. No platform run ID or credit receipt is asserted. Field differences are not measures of quality or clinical correctness."
+}

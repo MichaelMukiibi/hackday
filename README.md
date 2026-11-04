@@ -8,13 +8,14 @@ Built for Build54 Hacktoberfest Hack Day Kigali, October 31, 2026. Companion app
 
 The active healthcare dataset work starts from [MedQuAD](https://github.com/abachaa/MedQuAD). We will select diabetes and eye-health examples, then prepare reviewed Kinyarwanda and Luganda variants and task-specific augmentation in Adaption. The existing Alpaca export below is historical integration evidence; it is not the source for this healthcare dataset.
 
-### Download and validate
+### Download, validate, and filter
 
 Run these independent stages from the repository root with Python 3.11 or newer. The pipeline uses only the Python standard library; it requires no Adaption credentials or credits.
 
 ```sh
 python dataset_pipeline/pipeline.py download
 python dataset_pipeline/pipeline.py validate
+python dataset_pipeline/pipeline.py filter
 ```
 
 The download stage saves the unchanged source archive and a manifest. Repeated runs verify and reuse the archive. Validation checks its SHA-256, parses every XML document, and writes file checksums and a count report. See [pipeline instructions](dataset_pipeline/README.md) and [pinned source configuration](dataset_pipeline/source.json).
@@ -34,15 +35,27 @@ These are observed counts for the pinned release; the project's advertised total
 
 MedQuAD is published under **CC BY 4.0**. Attribute Asma Ben Abacha and Dina Demner-Fushman, *A Question-Entailment Approach to Question Answering*, BMC Bioinformatics (2019), retain source provenance, and identify modifications. The original authors removed answers from three MedlinePlus subsets for copyright reasons; the pipeline preserves those omissions and does not fetch replacement answers. See the [original source documentation and license](https://github.com/abachaa/MedQuAD).
 
+### Filtered candidate dataset
+
+The implemented filter applies [versioned topic rules](dataset_pipeline/filter_rules.json) to document titles, keeps answered records, and merges exact normalized QA duplicates while retaining every source reference and selection reason.
+
+- **526 unique QA candidates** from 175 documents; 553 pairs before merging 27 duplicates.
+- Overlapping topics: **245 diabetes**, **22 diabetic eye disease**, and **303 eye health**.
+- No answered document matched the explicit eye-screening title rule. This is a limitation of title-based selection, not evidence that screening content is absent.
+- JSONL, CSV, full selection audit, document inventory, and reports are generated in ignored `dataset_pipeline/data/filtered/`.
+- The tracked [selection evidence](docs/evidence/medquad-selection.json) records counts, rules/code hashes, and output checksums.
+
+This is a broad candidate pool: rare inherited conditions and country-specific guidance require relevance review. Original source answers remain unreviewed. See [filter documentation and test command](dataset_pipeline/README.md).
+
 ### Next stages
 
-1. Filter diabetes and eye-health records using versioned selection rules, retaining original document IDs and source URLs.
+1. Review topic relevance, source currency, and local applicability of the filtered candidates.
 2. Group related source documents and topics before creating deterministic training and held-out evaluation splits.
 3. Prepare a small multilingual pilot with translation provenance and explicit clinical and language review status.
 4. Export selected training records to Adaption for augmentation, then evaluate against the held-out cases.
 5. Add clearly marked synthetic intake, FastDRS tool-use, and specialist-handoff examples separately from source-derived medical Q&A.
 
-Only acquisition and structural validation are implemented. Topic filtering, translation, clinical review, and healthcare augmentation remain planned; structural validation does not establish medical accuracy or model improvement.
+Acquisition, structural validation, and topic filtering are implemented. Relevance review, dataset splitting, translation, clinical review, and healthcare augmentation remain planned; these pipeline checks do not establish medical accuracy or model improvement.
 
 ## Historical Adaption practice evidence
 
@@ -110,7 +123,7 @@ The detailed [training plan](docs/TRAINING_PLAN.md) covers provenance, target ex
 | Adaption SDK practice workflow | Present |
 | Existing adapted-data export and offline verification | Present |
 | MedQuAD acquisition and structural validation | Implemented and verified locally |
-| Diabetes and eye-health filtering | Planned |
+| Diabetes and eye-health filtering | Implemented; 526 unreviewed candidate QA records |
 | Kinyarwanda and Luganda pilot | Planned |
 | Healthcare-specific augmentation | Planned |
 | Clinician-reviewed Kinyarwanda training examples | Planned |

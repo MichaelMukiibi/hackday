@@ -1,0 +1,34 @@
+{
+  "dataset_id": "9c26e979-7a0f-4277-a3df-a6b677bba341",
+  "request_sha256": "d917b7d51ede8b9bc3b7c5e689eab09600003276f1a71f0052879b20a31b2537",
+  "request": {
+    "column_mapping": {
+      "prompt": "instruction",
+      "completion": "output",
+      "context": [
+        "input"
+      ]
+    },
+    "recipe_specification": {
+      "recipes": {
+        "prompt_rephrase": true,
+        "deduplication": false,
+        "reasoning_traces": false
+      }
+    },
+    "job_specification": {
+      "max_rows": 10
+    },
+    "brand_controls": {
+      "length": "concise",
+      "blueprint": "Write in English for a community health worker. Improve clarity while preserving the supplied medical facts, uncertainty, and qualifications. Use only the supplied question, answer, and context. Do not invent diagnoses, drug doses, examination findings, referrals, source citations, or local service details. Preserve the distinction between a screening result and a confirmed diagnosis. Treat the result as a draft requiring clinical review."
+    },
+    "training_type": "instruction_dataset",
+    "language_expansion": null
+  },
+  "estimate_only": true,
+  "estimated_credits": 1.0,
+  "estimated_minutes": 11.0,
+  "run_id": null,
+  "paid_run_started": false
+}

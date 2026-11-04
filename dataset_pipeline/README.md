@@ -241,8 +241,8 @@ It reads tar/ZIP exports in memory without extracting archive paths.
 
 `estimate` requires the successful verification receipt, validates the original
 instruction/output/input mapping with a ten-row cap, and sets `estimate=True`.
-It explicitly clears language expansion. There is no paid-launch command in this
-module. Quote values are point-in-time estimates, not receipts of consumption.
+It explicitly clears language expansion. Only the explicit `adapt` command starts a paid job; see the run-management
+commands below. Quote values are point-in-time estimates, not receipts of consumption.
 Future adaptation/augmentation must preserve the content-to-parent crosswalk or
 carry equivalent provenance rather than assuming the provider exports IDs.
 
@@ -251,3 +251,60 @@ all source prompt/context/answer content matched. The estimate-only response was
 1 credit and 11 minutes, with no adaptation run ID. See
 [import evidence](../docs/evidence/adaption-pilot-import.json). Provider
 canonicalization and an accepted mapping do not establish clinical or model quality.
+
+## Reusable adaptation run management
+
+`adaption_jobs.py` exposes a client-injected `AdaptationJob` class for estimate,
+launch, status, and CSV download, plus `inspect_result` for offline comparison.
+Its request is configured by versioned `adaption_recipe.json`. The existing
+`adaption_pilot.py` CLI wires it to the verified ten-row IjwiCare import.
+
+```powershell
+# Quote the exact versioned recipe; no paid run:
+uv run --frozen python dataset_pipeline/adaption_pilot.py estimate
+# Starts paid processing, only if a fresh quote is within one credit:
+uv run --frozen python dataset_pipeline/adaption_pilot.py adapt --max-credits 1
+# One status snapshot; repeat later while pending/running:
+uv run --frozen python dataset_pipeline/adaption_pilot.py run-status
+# After the same run succeeds:
+uv run --frozen python dataset_pipeline/adaption_pilot.py download
+# Local inspection; no API key or network required:
+uv run --frozen python dataset_pipeline/adaption_pilot.py inspect
+```
+
+If needed, select the installed Python explicitly with uv's `--python 3.14`, or
+invoke `.venv\Scripts\python.exe` in this workspace. `--recipe PATH` selects a
+recipe; `--run-name NAME` selects an isolated local run folder (default `pilot-v1`).
+Use the same recipe and run name to retry or monitor an existing run. Preserve
+past run folders; changing a recipe in an occupied folder is rejected. A new
+run name alone cannot bypass the check for another provider run on the dataset.
+
+The default recipe caps processing at ten rows, rephrases prompts, requests
+concise English drafts for community health workers, disables reasoning traces
+and deduplication, and explicitly clears language expansion. Its instructions
+request preservation of source facts and uncertainty; they do not establish
+clinical correctness. The exact recipe was accepted by an estimate-only API
+request quoting 1 credit and 11 minutes. See
+[recipe estimate evidence](../docs/evidence/adaption-recipe-estimate.json).
+
+Launches require a finite credit cap, a ready source dataset with the expected
+row count, and a fresh estimate. The cap is a client-side quote check, not a
+provider-enforced billing maximum or evidence of actual credit consumption.
+Before sending a paid request, the manager saves its full request and stable
+idempotency key. A timed-out launch replays that same request/key; a recorded
+run ID is reused rather than relaunched. Do not delete launch state to retry.
+
+State is ignored under `data/adaption/runs/NAME/`: `estimate.json`, `launch.json`,
+`status.json`, `adapted-export.bin`, and `download.json`. Download checks provider
+run ownership before and after fetching bytes and requires success. It never
+extracts archive members to disk. Monitoring is a single snapshot, so a caller
+can schedule checks without holding a long-running wait.
+
+Inspection verifies the export hash and job identity, then matches original
+prompt/completion pairs back to training parents. Missing, duplicated, changed,
+or untraceable parents and empty enhanced completions fail instead of being
+silently assigned IDs. Successful inspection writes `adapted_rows.jsonl`,
+`comparison.csv`, and `inspection.json` with parent/group/split links and text
+change counts. Generated outputs remain marked `not_reviewed`; text changes are
+not labelled as clinical or model-quality improvement. Launch/download/inspection
+are covered by mocked behavior tests; no paid run was started while adding them.

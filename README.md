@@ -4,6 +4,33 @@
 
 Built for Build54 Hacktoberfest Hack Day Kigali, October 31, 2026. Companion application: [Ijwi](https://github.com/MichaelMukiibi/ijwi-hack-day).
 
+## Quick technical validation
+
+With the pinned dataset already downloaded, run this offline smoke test:
+
+```sh
+python dataset_pipeline/pipeline.py smoke
+```
+
+For a fresh checkout, first run `python dataset_pipeline/pipeline.py download`.
+The smoke command reruns validation, filtering, scope triage, grouped splitting,
+and a deterministic **10-row English pilot export**: 4 diabetic-eye, 3 diabetes,
+and 3 other eye-health examples. It checks record accounting, training-only
+parent selection, held-out group exclusion, and exact CSV/JSONL round trips.
+No Adaption credentials, uploads, credits, generation, or inference are involved.
+
+The pilot files are `dataset_pipeline/data/pilot/adaption_pilot.csv` and `.jsonl`;
+`pilot_parents.jsonl` retains full provenance. `pilot_manifest.json` records IDs,
+hashes, selection rules, and column mapping (`instruction` -> prompt, `output`
+-> completion, `input` -> context), following the existing repo example.
+Actual Adaption import compatibility remains unverified. The local
+`dataset_pipeline/data/smoke_report.json` and tracked
+[smoke evidence](docs/evidence/medquad-smoke-report.json) record the technical result.
+
+A smoke-test pass establishes local data-flow integrity, not clinical accuracy,
+translation quality, augmentation quality, or model performance. The next
+integration check is a real import of this small pilot into Adaption.
+
 ## IjwiCare dataset: MedQuAD
 
 The active healthcare dataset work starts from [MedQuAD](https://github.com/abachaa/MedQuAD). We will select diabetes and eye-health examples, then prepare reviewed Kinyarwanda and Luganda variants and task-specific augmentation in Adaption. The existing Alpaca export below is historical integration evidence; it is not the source for this healthcare dataset.

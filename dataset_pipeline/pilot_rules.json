@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "seed": "ijwicare-english-smoke-v1",
+  "max_answer_characters": 6000,
+  "exclude_local_context_flags": true,
+  "buckets": [
+    {"topic": "diabetic_eye_disease", "count": 4, "exclude_topics": []},
+    {"topic": "diabetes", "count": 3, "exclude_topics": ["diabetic_eye_disease"]},
+    {"topic": "eye_health", "count": 3, "exclude_topics": ["diabetes", "diabetic_eye_disease"]}
+  ],
+  "column_mapping": {"prompt": "instruction", "completion": "output", "context": ["input"]},
+  "purpose": "Ten-row English technical smoke pilot. No generation, translation, upload, paid job, clinical evaluation, or inference is performed. Mapping follows the existing repository Adaption example; live import compatibility is not yet verified."
+}

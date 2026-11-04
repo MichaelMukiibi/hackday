@@ -92,11 +92,17 @@ def validate():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=["download", "validate", "filter", "review", "split"])
+    parser.add_argument("stage", choices=["download", "validate", "filter", "review", "split", "pilot", "smoke"])
     args = parser.parse_args()
     if args.stage == "filter":
         from filtering import run
         run(HERE, DATA, SOURCE, digest, write_json)
+    elif args.stage in {"pilot", "smoke"}:
+        import pilot
+        if args.stage == "pilot":
+            pilot.run(HERE, DATA, SOURCE, digest, write_json)
+        else:
+            pilot.smoke(HERE, DATA, SOURCE, digest, write_json, validate)
     elif args.stage in {"review", "split"}:
         import preparation
         getattr(preparation, args.stage)(HERE, DATA, SOURCE, digest, write_json)

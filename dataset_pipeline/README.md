@@ -122,3 +122,42 @@ python -m unittest discover -b -s dataset_pipeline -p "test_*.py"
 Next modules: human scope/current-evidence review; an independently sourced
 diabetic-eye evaluation set; multilingual pilot preparation; Adaption export;
 and clinical/language review. Those modules must preserve split assignments.
+
+## Small English pilot and fast smoke test
+
+```powershell
+# Export a pilot from existing split files only:
+python dataset_pipeline/pipeline.py pilot
+# Rerun every implemented local preparation stage and validate the pilot:
+python dataset_pipeline/pipeline.py smoke
+```
+
+The smoke command requires the already-downloaded source archive and makes no
+network calls. For a fresh checkout, run `download` first. It regenerates stage
+outputs from versioned inputs, rather than assuming old files are current.
+
+`pilot_rules.json` selects ten unique English training parents using a fixed seed:
+4 diabetic-eye, 3 diabetes excluding diabetic-eye, and 3 other eye-health records.
+Answers longer than 6,000 characters and records with local-context content flags
+are skipped; insufficient eligible examples cause an error instead of reducing
+the requested sample. These rules bound a technical pilot, not a representative
+medical evaluation set. Source text is neither truncated nor rewritten.
+
+Pilot outputs in ignored `data/pilot/`:
+
+- `adaption_pilot.csv` and `.jsonl`: identical instruction/output/input columns,
+  plus parent IDs, groups, split, language, source revision, and review statuses.
+- `pilot_parents.jsonl`: full source records and provenance.
+- `pilot_manifest.json`: exact IDs, group IDs, input/output hashes, rule version,
+  column mapping, and CSV/JSONL verification results.
+
+The export mapping follows the existing `main.py` example; no live import is
+claimed. Validation/test records and groups are rejected. Exported text and
+metadata must match the training parent exactly, including multiline content.
+`data/smoke_report.json` summarizes all five local stages and their report hashes.
+A tracked snapshot is `docs/evidence/medquad-smoke-report.json` at repo root.
+
+No upload, paid Adaption job, translation, model call, or clinical validation is
+performed. A separate small live import is the next integration check. Do not run
+`main.py` for this pilot: that historical script imports Alpaca and starts a paid
+adaptation automatically.

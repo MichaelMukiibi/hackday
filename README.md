@@ -28,7 +28,8 @@ credentials or credits. See [setup and verification](CONTRIBUTING.md) for detail
 | Automated scope triage | 280 core candidates; 246 deferred |
 | Grouped splits | 224 training / 28 validation / 28 test |
 | English pilot | 10 training examples; local CSV/JSONL checks passed |
-| Live healthcare import, augmentation, and translations | Not yet verified or run |
+| Live Adaption import | Verified; 10 source prompt/answer pairs matched |
+| Paid healthcare adaptation, augmentation, and translations | Not run |
 
 Clinical and language review remain pending. All 22 diabetic-eye examples belong
 to one training group, so the held-out sets do not measure diabetic-eye performance.
@@ -41,7 +42,14 @@ is public with ten English training rows, the dataset card, original license,
 provenance, and checksum manifest. All five published files were fetched
 anonymously at revision `bb8f503313728b29add15bcba0c090b6abe6c0b9` and matched
 the local package byte-for-byte. See the [publication receipt](docs/evidence/huggingface-publication.json)
-for the pinned CSV URL and column mapping. Adaption import remains the next check.
+for the pinned CSV URL and column mapping.
+
+The pilot is also imported into Adaption as `9c26e979-7a0f-4277-a3df-a6b677bba341`.
+All ten source prompt/answer pairs were verified. Its raw export drops parent
+metadata, so the local crosswalk restores IDs/groups/splits by exact content
+matching. An estimate-only request quoted **1 credit / 11 minutes** for ten rows;
+no paid run was started. See [Adaption import evidence](docs/evidence/adaption-pilot-import.json)
+and [live-stage commands](dataset_pipeline/README.md).
 
 ## Documentation
 

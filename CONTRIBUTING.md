@@ -68,6 +68,15 @@ interpreter explicitly, for example `uv run --frozen --python 3.14 python ...`.
 Record the returned receipt under `docs/evidence/` before handing the source URL
 to Adaption. Never commit the `.env` or token.
 
+## Import the pilot into Adaption
+
+With `ADAPTION_API_KEY` configured locally, use the independent `import`, `status`,
+`verify`, and `estimate` stages of `dataset_pipeline/adaption_pilot.py`. See the
+[live-stage guide](dataset_pipeline/README.md). These stages reuse the saved import,
+verify canonical source content, and obtain a ten-row estimate; none launches paid
+adaptation. Preserve the parent crosswalk because the raw provider export omits
+source metadata. Keep generated exports and account state in ignored data paths.
+
 ## Verification
 
 For pipeline behavior changes, run the relevant behavioral tests and the local

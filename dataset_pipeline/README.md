@@ -208,3 +208,46 @@ visibility nor deletes remote files. After upload it fetches all five files
 anonymously at the returned commit and compares their bytes. A receipt with the
 pinned CSV URL is written to ignored `data/huggingface-publication.json`.
 No Adaption import or credit-consuming job is launched by this command.
+
+## Live Adaption pilot import and estimate
+
+The separate SDK command reads `ADAPTION_API_KEY` from the ignored repository
+`.env`. It never prints the key and does not invoke historical `main.py`.
+
+```powershell
+uv run --frozen python dataset_pipeline/adaption_pilot.py import
+uv run --frozen python dataset_pipeline/adaption_pilot.py status
+uv run --frozen python dataset_pipeline/adaption_pilot.py verify
+uv run --frozen python dataset_pipeline/adaption_pilot.py estimate
+```
+
+Use an explicit installed Python version with uv if needed, as described in
+[Contributing](../CONTRIBUTING.md). The `import` command sends the pinned Hugging
+Face tree URL and only `train.csv`, with `processing_mode: raw` and explicit
+column mapping. Import state is saved immediately under ignored `data/adaption/`;
+rerunning reuses that dataset ID. Automatic retries for creation are disabled.
+If the outcome of creation is unknown, the saved marker blocks another creation
+until it is reconciled against the account's datasets. Do not remove it just to
+retry a timed-out import.
+
+`status` checks one current snapshot. If ingestion is pending, wait before
+rerunning it; `verify` requires a successful ten-row import. Raw CSV exports
+contain canonical `original_prompt` and `original_completion` columns, with
+question and JSON context joined by a blank line. The provider export omits
+original ID/group/split metadata. Verification matches every complete canonical
+prompt/answer pair exactly, rejects missing/changed/duplicate rows, and saves
+`parent_crosswalk.json` to recover the original parent ID, group, and split.
+It reads tar/ZIP exports in memory without extracting archive paths.
+
+`estimate` requires the successful verification receipt, validates the original
+instruction/output/input mapping with a ten-row cap, and sets `estimate=True`.
+It explicitly clears language expansion. There is no paid-launch command in this
+module. Quote values are point-in-time estimates, not receipts of consumption.
+Future adaptation/augmentation must preserve the content-to-parent crosswalk or
+carry equivalent provenance rather than assuming the provider exports IDs.
+
+Current evidence: dataset `9c26e979-7a0f-4277-a3df-a6b677bba341` imported ten rows;
+all source prompt/context/answer content matched. The estimate-only response was
+1 credit and 11 minutes, with no adaptation run ID. See
+[import evidence](../docs/evidence/adaption-pilot-import.json). Provider
+canonicalization and an accepted mapping do not establish clinical or model quality.

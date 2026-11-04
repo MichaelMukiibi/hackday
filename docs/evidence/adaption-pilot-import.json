@@ -1,0 +1,74 @@
+{
+  "dataset_id": "9c26e979-7a0f-4277-a3df-a6b677bba341",
+  "import": {
+    "request": {
+      "url": "https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot/tree/bb8f503313728b29add15bcba0c090b6abe6c0b9",
+      "files": [
+        "train.csv"
+      ],
+      "processing_mode": "raw",
+      "column_mapping": {
+        "prompt": "instruction",
+        "completion": "output",
+        "context": [
+          "input"
+        ]
+      }
+    },
+    "request_sha256": "524fde2ab9a2efbecf9a339229bbaa9a5864dec480ec65ec96f9ef27d60a56d4",
+    "source_revision": "bb8f503313728b29add15bcba0c090b6abe6c0b9",
+    "expected_rows": 10,
+    "source_csv_sha256": "ceed3fcdfedd36c0404a500caebe84fb69a1c8fcee6c97493408f29e26c3f8f7",
+    "status": "pending",
+    "paid_run_started": false,
+    "dataset_id": "9c26e979-7a0f-4277-a3df-a6b677bba341"
+  },
+  "status": {
+    "dataset_id": "9c26e979-7a0f-4277-a3df-a6b677bba341",
+    "status": "succeeded",
+    "row_count": 10,
+    "configured_column_mapping": null,
+    "run_id": "passthrough-9c26e979-7a0f-4277-a3df-a6b677bba341-1793814431235",
+    "source_revision": "bb8f503313728b29add15bcba0c090b6abe6c0b9",
+    "paid_run_started": false
+  },
+  "verification": {
+    "dataset_id": "9c26e979-7a0f-4277-a3df-a6b677bba341",
+    "source_revision": "bb8f503313728b29add15bcba0c090b6abe6c0b9",
+    "rows": 10,
+    "parent_ids_recovered_by_exact_content_match": true,
+    "source_text_fields_verified": true,
+    "source_metadata_columns_retained_by_export": false,
+    "parent_crosswalk_sha256": "983dbea4d61d13dfedcee95b9e4f8c4fdd06421616df960f0c3b9e16b99852af",
+    "export_columns": [
+      "enhanced_completion",
+      "enhanced_prompt",
+      "original_completion",
+      "original_prompt"
+    ],
+    "export_sha256": "6f9f447931c07d7937887fbfd0d01d9b58943905c9b399cbd0e44592c433f35b",
+    "source_csv_sha256": "ceed3fcdfedd36c0404a500caebe84fb69a1c8fcee6c97493408f29e26c3f8f7",
+    "paid_run_started": false
+  },
+  "estimate": {
+    "dataset_id": "9c26e979-7a0f-4277-a3df-a6b677bba341",
+    "column_mapping": {
+      "prompt": "instruction",
+      "completion": "output",
+      "context": [
+        "input"
+      ]
+    },
+    "max_rows": 10,
+    "estimate_only": true,
+    "run_id": null,
+    "estimated_credits": 1.0,
+    "estimated_minutes": 11.0,
+    "paid_run_started": false
+  },
+  "limits": [
+    "Raw export omits original metadata; use the verified parent crosswalk for descendants.",
+    "Estimate only; no paid adaptation, augmentation, translation, or model training launched.",
+    "Clinical and language review remain pending; held-out diabetic-eye evaluation coverage remains absent."
+  ]
+}

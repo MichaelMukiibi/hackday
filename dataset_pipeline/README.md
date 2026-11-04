@@ -161,3 +161,50 @@ No upload, paid Adaption job, translation, model call, or clinical validation is
 performed. A separate small live import is the next integration check. Do not run
 `main.py` for this pilot: that historical script imports Alpaca and starts a paid
 adaptation automatically.
+
+## Hugging Face publication package
+
+```powershell
+python dataset_pipeline/prepare_huggingface.py
+```
+
+This separate, offline packaging command verifies the pilot and all split-file
+checksums, rechecks each pilot row against its training parent, and permits exactly
+ten rows. It builds only five allowlisted files under ignored `data/huggingface/`:
+`README.md` (dataset card), `LICENSE` (original MedQuAD terms), `train.csv`,
+`provenance.json` (full parent metadata), and `manifest.json` (source revision,
+pipeline Git commit, hashes and column mapping). Unexpected extra files cause
+an error rather than entering an upload. Validation/test data are never packaged.
+
+The dataset card explicitly configures only `train.csv` as the training split;
+JSON metadata is not an additional dataset split. The card preserves attribution
+and states the unreviewed status and evaluation limits. Run packaging from a
+committed feature revision before upload so the recorded Git commit includes
+the packaging script. Upload only these five files to the Hugging Face dataset
+repository, then record its exact commit and verify its published file hashes.
+Packaging itself does not create repositories, upload, read credentials, or run
+Adaption jobs.
+
+### Programmatic publishing
+
+The public pilot repository is
+[MichaelMukiibi/ijwicare-medquad-pilot](https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot).
+Set `HF_TOKEN` in the ignored repository-root `.env` file to a token with write
+access to that repository. Do not paste or log the token. The uploader loads it
+through python-dotenv and the official Hugging Face client.
+
+```powershell
+uv sync --frozen
+# Check the package and authenticated account without uploading:
+uv run --frozen python dataset_pipeline/publish_huggingface.py
+# Explicitly upload and verify the published revision:
+uv run --frozen python dataset_pipeline/publish_huggingface.py --publish
+```
+
+The uploader accepts only the five package files, checks all hashes and parent
+records, verifies the account owner, and uploads one commit with a parent-revision
+guard. Existing matching contents are reused. It neither changes repository
+visibility nor deletes remote files. After upload it fetches all five files
+anonymously at the returned commit and compares their bytes. A receipt with the
+pinned CSV URL is written to ignored `data/huggingface-publication.json`.
+No Adaption import or credit-consuming job is launched by this command.

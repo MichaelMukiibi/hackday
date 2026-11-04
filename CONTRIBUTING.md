@@ -74,7 +74,9 @@ With `ADAPTION_API_KEY` configured locally, use the independent `import`, `statu
 `verify`, and `estimate` stages of `dataset_pipeline/adaption_pilot.py`. See the
 [live-stage guide](dataset_pipeline/README.md). These stages reuse the saved import,
 verify canonical source content, and obtain a ten-row estimate; none launches paid
-adaptation. Preserve the parent crosswalk because the raw provider export omits
+adaptation. The separate `adapt --max-credits 1` command explicitly launches a
+paid job after checking a fresh quote. Use `run-status`, `download`, and `inspect`
+for the saved run; see the versioned `dataset_pipeline/adaption_recipe.json`. Preserve the parent crosswalk because the raw provider export omits
 source metadata. Keep generated exports and account state in ignored data paths.
 
 ## Verification

@@ -1,4 +1,4 @@
-"""Import, inspect, and quote the pinned pilot in Adaption; no paid launch."""
+"""Explicit, independently rerunnable Adaption pilot stages; adapt starts paid processing."""
 import argparse
 import csv
 import hashlib
@@ -52,9 +52,10 @@ def check_status(client,state):
     result=client.datasets.get(state['dataset_id'])
     mapping=result.configured_column_mapping
     mapping=mapping.model_dump(exclude_none=True) if hasattr(mapping,'model_dump') else mapping
+    paid_started=bool(result.run_id and not result.run_id.startswith('passthrough-'))
     summary={'dataset_id':state['dataset_id'],'status':result.status,'row_count':result.row_count,
              'configured_column_mapping':mapping,'run_id':result.run_id,
-             'source_revision':state['source_revision'],'paid_run_started':False}
+             'source_revision':state['source_revision'],'paid_run_started':paid_started}
     if result.status=='failed':
         summary['error_code']=getattr(result.error_data,'code',None)
         write(STATE/'status.json',summary)
@@ -110,6 +111,8 @@ def verify_rows(expected,actual):
 
 def verify_export(client,state,receipt):
     status=check_status(client,state)
+    if status['paid_run_started']:
+        raise ValueError('Source verification must precede a paid launch; use download/inspect for adapted output')
     if status['status']!='succeeded' or status['row_count']!=10:
         raise ValueError('Import not ready; rerun status/verify after ingestion completes')
     payload=client.datasets.download(state['dataset_id'],file_format='csv').read()
@@ -133,27 +136,39 @@ def verify_export(client,state,receipt):
     return report
 
 
-def quote(client,state):
+def quote(client,state,config_path=None,run_folder=None):
     path=STATE/'verification.json'
     verified=json.loads(path.read_text(encoding='utf-8'))
     if verified['dataset_id']!=state['dataset_id']: raise ValueError('Verify this import before quoting')
-    result=client.datasets.adapt(state['dataset_id'],column_mapping=MAPPING,
-                                job_specification={'max_rows':10},estimate=True,
-                                language_expansion=None)
-    if not result.estimate or result.run_id is not None:
-        raise ValueError('Unexpected response to estimate-only request')
-    report={'dataset_id':state['dataset_id'],'column_mapping':MAPPING,'max_rows':10,
-            'estimate_only':True,'run_id':result.run_id,
-            'estimated_credits':result.estimated_credits_consumed,
-            'estimated_minutes':result.estimated_minutes,'paid_run_started':False}
+    from adaption_jobs import AdaptationJob, read_json
+    job=AdaptationJob(client,state['dataset_id'],run_folder or STATE/'runs/pilot-v1',read_json(config_path or HERE/'adaption_recipe.json'))
+    report=job.estimate()
     write(STATE/'estimate.json',report)
     return report
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('stage',choices=['import','status','verify','estimate'])
+    parser.add_argument('stage',choices=['import','status','verify','estimate','adapt','run-status','download','inspect'])
+    parser.add_argument('--max-credits',type=float,help='Required credit cap for the paid adapt command')
+    parser.add_argument('--recipe',type=Path,default=HERE/'adaption_recipe.json')
+    parser.add_argument('--run-name',default='pilot-v1',help='Local run-state folder; reuse the same name when retrying')
     args=parser.parse_args()
+    import re
+    if not re.fullmatch(r'[a-z][a-z0-9_-]{0,63}',args.run_name):
+        parser.error('--run-name must use lowercase letters, digits, underscores or hyphens, starting with a letter')
+    run_folder=STATE/'runs'/args.run_name
+    if args.stage=='adapt' and args.max_credits is None:
+        parser.error('adapt requires --max-credits; only this command starts paid processing')
+    if args.stage=='inspect':
+        from adaption_jobs import inspect_result
+        published=json.loads(RECEIPT.read_text(encoding='utf-8'))
+        if hashlib.sha256((HERE/'data/huggingface/train.csv').read_bytes()).hexdigest()!=published['verified_files']['train.csv']['sha256']:
+            raise ValueError('Local parent CSV differs from published source')
+        with (HERE/'data/huggingface/train.csv').open(encoding='utf-8',newline='') as stream:
+            expected=list(csv.DictReader(stream))
+        print(json.dumps(inspect_result(run_folder,expected,csv_payloads,verify_rows),indent=2))
+        return 0
     from dotenv import load_dotenv
     load_dotenv(ROOT/'.env',override=False)
     token=os.environ.get('ADAPTION_API_KEY','').strip()
@@ -169,7 +184,17 @@ def main():
         state=json.loads((STATE/'import.json').read_text(encoding='utf-8'))
         if args.stage=='status': result=check_status(client,state)
         elif args.stage=='verify': result=verify_export(client,state,receipt)
-        else: result=quote(client,state)
+        elif args.stage=='estimate': result=quote(client,state,args.recipe,run_folder)
+        else:
+            from adaption_jobs import AdaptationJob, read_json
+            config=read_json(args.recipe)
+            job=AdaptationJob(client,state['dataset_id'],run_folder,config)
+            verified=read_json(STATE/'verification.json')
+            if verified['dataset_id']!=state['dataset_id']:
+                raise ValueError('Verify the imported pilot before running adaptation stages')
+            if args.stage=='adapt': result=job.launch(args.max_credits)
+            elif args.stage=='run-status': result=job.status()
+            else: result=job.download()
     print(json.dumps(result,indent=2,ensure_ascii=False))
     return 0
 

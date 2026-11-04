@@ -23,6 +23,8 @@ smoke: rerun validate -> filter -> review -> split -> pilot
 | [filtering.py](dataset_pipeline/filtering.py) | Topic candidates, provenance, duplicate merging, audit |
 | [preparation.py](dataset_pipeline/preparation.py) | Scope triage and grouped evaluation splits |
 | [pilot.py](dataset_pipeline/pilot.py) | Ten-row export and local smoke checks |
+| [adaption_jobs.py](dataset_pipeline/adaption_jobs.py) | Client-injected job lifecycle, capped launch, idempotent retries, guarded downloads, and inspection |
+| [adaption_pilot.py](dataset_pipeline/adaption_pilot.py) | Live pilot import, verification, estimate, and explicit paid-run commands |
 | Versioned JSON files in [dataset_pipeline](dataset_pipeline/README.md) | Source revision, selection, scope, split, and pilot settings |
 | Ignored `dataset_pipeline/data/` | Raw archive, generated data, manifests, queues, and reports |
 | [docs/evidence](docs/evidence) | Tracked aggregate evidence snapshots |
@@ -43,6 +45,23 @@ Smoke checks establish local data-flow integrity, not clinical accuracy,
 translation quality, augmentation quality, or model performance. The next live
 integration step is a separately configured healthcare adaptation or augmentation
 run; raw import and an estimate-only request are already verified.
+
+## Adaptation lifecycle
+
+The versioned [recipe](dataset_pipeline/adaption_recipe.json) fixes the ten-row
+mapping, rephrasing settings, English draft instructions, and disabled language
+expansion. `AdaptationJob` gets a fresh quote before an explicitly requested paid
+launch, stores a request-derived idempotency key, and preserves ambiguous launch
+state for safe replay. Source readiness and run ownership prevent mixing outputs
+from another job. The credit cap checks the quote locally; it is not a platform
+billing guarantee.
+
+Downloaded CSV bytes are tied to the recorded run and hashed. Offline inspection
+restores original parent/group/split links by exact source-content matching and
+writes before/after comparisons. Outputs remain unreviewed. The lifecycle is
+covered by offline mocked tests; its exact recipe was accepted by an estimate-only
+request ([evidence](docs/evidence/adaption-recipe-estimate.json)). No paid adaptation
+was launched while adding the reusable code.
 
 ## IjwiCare dataset: MedQuAD
 

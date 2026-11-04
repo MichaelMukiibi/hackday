@@ -51,6 +51,14 @@ matching. An estimate-only request quoted **1 credit / 11 minutes** for ten rows
 no paid run was started. See [Adaption import evidence](docs/evidence/adaption-pilot-import.json)
 and [live-stage commands](dataset_pipeline/README.md).
 
+## Reusable Adaption commands
+
+The [live-stage guide](dataset_pipeline/README.md) covers `estimate`,
+`adapt --max-credits 1`, `run-status`, `download`, and offline `inspect`, backed
+by a versioned recipe and reusable job manager. Only `adapt` starts paid
+processing. It checks a fresh quote and stores retry-safe run state; adding and
+testing this code did not launch a paid job.
+
 ## Documentation
 
 - [Architecture](ARCHITECTURE.md): stages, provenance, dataset counts, integration boundaries, and roadmap.

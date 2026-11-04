@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "column_mapping": {"prompt": "instruction", "completion": "output", "context": ["input"]},
+  "recipe_specification": {"recipes": {"prompt_rephrase": true, "deduplication": false, "reasoning_traces": false}},
+  "job_specification": {"max_rows": 10},
+  "brand_controls": {
+    "length": "concise",
+    "blueprint": "Write in English for a community health worker. Improve clarity while preserving the supplied medical facts, uncertainty, and qualifications. Use only the supplied question, answer, and context. Do not invent diagnoses, drug doses, examination findings, referrals, source citations, or local service details. Preserve the distinction between a screening result and a confirmed diagnosis. Treat the result as a draft requiring clinical review."
+  },
+  "training_type": "instruction_dataset",
+  "language_expansion": null
+}

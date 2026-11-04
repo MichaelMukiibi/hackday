@@ -54,6 +54,15 @@ Outputs and configuration details are documented in the
 [pipeline guide](dataset_pipeline/README.md). Configuration changes require
 rerunning their stage and all downstream stages. Keep raw inputs immutable.
 
+## Prepare the Hugging Face pilot
+
+After the local smoke test, run `python dataset_pipeline/prepare_huggingface.py`
+to build the allowlisted ten-row training-only package. It verifies pilot/split
+checksums and preserves the original license and full parent provenance. See
+[publication package details](dataset_pipeline/README.md). The command is offline;
+uploading is a separate operation. Record the Hugging Face revision and verify
+published file hashes before handing the source URL to Adaption.
+
 ## Verification
 
 For pipeline behavior changes, run the relevant behavioral tests and the local

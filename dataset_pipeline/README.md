@@ -161,3 +161,26 @@ No upload, paid Adaption job, translation, model call, or clinical validation is
 performed. A separate small live import is the next integration check. Do not run
 `main.py` for this pilot: that historical script imports Alpaca and starts a paid
 adaptation automatically.
+
+## Hugging Face publication package
+
+```powershell
+python dataset_pipeline/prepare_huggingface.py
+```
+
+This separate, offline packaging command verifies the pilot and all split-file
+checksums, rechecks each pilot row against its training parent, and permits exactly
+ten rows. It builds only five allowlisted files under ignored `data/huggingface/`:
+`README.md` (dataset card), `LICENSE` (original MedQuAD terms), `train.csv`,
+`provenance.json` (full parent metadata), and `manifest.json` (source revision,
+pipeline Git commit, hashes and column mapping). Unexpected extra files cause
+an error rather than entering an upload. Validation/test data are never packaged.
+
+The dataset card explicitly configures only `train.csv` as the training split;
+JSON metadata is not an additional dataset split. The card preserves attribution
+and states the unreviewed status and evaluation limits. Run packaging from a
+committed feature revision before upload so the recorded Git commit includes
+the packaging script. Upload only these five files to the Hugging Face dataset
+repository, then record its exact commit and verify its published file hashes.
+Packaging itself does not create repositories, upload, read credentials, or run
+Adaption jobs.

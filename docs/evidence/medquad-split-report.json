@@ -1,0 +1,68 @@
+{
+  "source_revision": "577bd37b96c02d1833b2c9eed2de9f96964e96cb",
+  "input_sha256": "e08a1df50634da239192aabd7af6e40c4f0622151519daa505d0081417485489",
+  "rules_sha256": "754cbdae6183c5befeec656b1363e0431441357fdb08cd2755e11149a8edb37d",
+  "rules_version": "1.0.0",
+  "code_sha256": "a31408dd229d851323b4a158f56816296f394c85e9310b8bf75ebfc4fe0e862a",
+  "seed": "ijwicare-medquad-v1",
+  "target_ratios": {
+    "train": 0.8,
+    "validation": 0.1,
+    "test": 0.1
+  },
+  "core_records": 280,
+  "groups": 50,
+  "largest_group_records": 27,
+  "grouping_links": {
+    "document": 227,
+    "focus": 230,
+    "question": 112,
+    "url": 212
+  },
+  "splits": {
+    "train": {
+      "records": 224,
+      "groups": 24,
+      "topic_counts": {
+        "diabetes": 149,
+        "diabetic_eye_disease": 22,
+        "eye_health": 97
+      }
+    },
+    "validation": {
+      "records": 28,
+      "groups": 13,
+      "topic_counts": {
+        "diabetes": 15,
+        "eye_health": 13
+      }
+    },
+    "test": {
+      "records": 28,
+      "groups": 13,
+      "topic_counts": {
+        "diabetes": 23,
+        "eye_health": 5
+      }
+    }
+  },
+  "cross_split_key_collisions": 0,
+  "held_out_missing_topics": [
+    "diabetic_eye_disease"
+  ],
+  "limits": [
+    "Automated scope triage; no clinical approval or translation review.",
+    "Grouping covers documents, URL paths, configured focus aliases, exact text, and answer shingle similarity; semantic overlap can remain.",
+    "Target ratios are approximate; groups are indivisible and topics are not stratified.",
+    "Only train parents may be augmented; all descendants inherit parent group and split.",
+    "Deferred scope candidates are excluded from all splits and must be regrouped before later admission.",
+    "Topics missing from both held-out sets require independently sourced evaluation cases; inspect held_out_missing_topics."
+  ],
+  "outputs": {
+    "train.jsonl": "bc1d623c1b5f4713931795a0e1cbb4676612e6840d5ac468fa30fa60ffdf0d06",
+    "validation.jsonl": "b669bf11a57480c3e2d78d11b8c205af8c42079537f5503ccf59361006178f8b",
+    "test.jsonl": "7cfce2ea752494b56f288fa8bac3718813b7de686c1aef3316e46dd22abe1ac8",
+    "groups.json": "f273bfda5accc9634b4830faf58d4739a72631790d21d7311d0fc85422959ffc",
+    "assignment.csv": "bddfded60e12e27b37cc410a09899a7e2ddbbb36f360c36eee311cd16eec0045"
+  }
+}

@@ -34,12 +34,15 @@ retained and all clinical/language review statuses remain unreviewed. The export
 has passed local CSV/JSONL round trips and is published on
 [Hugging Face](https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot);
 see the [verified publication receipt](docs/evidence/huggingface-publication.json).
-A live Adaption import is not yet verified.
+The live Adaption raw import has been verified for all ten prompt/answer pairs;
+see [import evidence](docs/evidence/adaption-pilot-import.json). Its raw export
+omits parent metadata; an exact-content crosswalk restores IDs, groups, and split.
+A ten-row estimate quoted 1 credit and 11 minutes without starting a paid run.
 
 Smoke checks establish local data-flow integrity, not clinical accuracy,
 translation quality, augmentation quality, or model performance. The next live
-integration check is an import of this small pilot, followed by a separately
-configured healthcare adaptation or augmentation run.
+integration step is a separately configured healthcare adaptation or augmentation
+run; raw import and an estimate-only request are already verified.
 
 ## IjwiCare dataset: MedQuAD
 

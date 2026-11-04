@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "selection_field": "document_focus",
+  "topics": [
+    {"name": "diabetes", "patterns": ["\\b(?:diabetes|diabetic|prediabetes)\\b", "\\binsulin resistance\\b"], "exclude_patterns": ["\\bdiabetes insipidus\\b"]},
+    {"name": "diabetic_eye_disease", "patterns": ["\\bdiabetic (?:retinopathy|eye|macular)\\b", "\\bdiabetes\\b.*\\beyes?\\b"], "exclude_patterns": []},
+    {"name": "eye_health", "patterns": ["\\beyes?\\b", "\\beyelid\\b", "\\b(?:retina|retinal|retinopathy|macular|glaucoma|cataracts?|cornea|corneal|blindness|vision|amblyopia|strabismus|conjunctivitis|refractive)\\b"], "exclude_patterns": []},
+    {"name": "eye_screening", "patterns": ["\\b(?:eyes?|vision|retinal|retinopathy|glaucoma)\\b.*\\b(?:screening|exam|exams|examination|test|tests)\\b", "\\b(?:screening|exam|exams|examination|test|tests)\\b.*\\b(?:eyes?|vision|retinal|retinopathy|glaucoma)\\b"], "exclude_patterns": []}
+  ],
+  "deduplication": "SHA-256 of NFKC/casefold/whitespace-normalized question and answer, serialized as a JSON array",
+  "notes": "Topic candidates only, not clinical eligibility labels. Incidental mentions in answers and synonyms do not select documents. General cancer or other screening is outside scope. Diabetes insipidus is excluded from the diabetes category. No minimum target count or generation is used."
+}

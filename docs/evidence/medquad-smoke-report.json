@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "source_revision": "577bd37b96c02d1833b2c9eed2de9f96964e96cb",
+  "stages": [
+    "validate",
+    "filter",
+    "review",
+    "split",
+    "pilot"
+  ],
+  "candidate_records": 526,
+  "scope_decisions": {
+    "core_candidate": 280,
+    "deferred_local_context": 12,
+    "deferred_specialist": 234
+  },
+  "split_counts": {
+    "train": 224,
+    "validation": 28,
+    "test": 28
+  },
+  "pilot_rows": 10,
+  "pilot_checks": {
+    "training_parents_only": true,
+    "heldout_groups_excluded": true,
+    "csv_round_trip": true,
+    "jsonl_round_trip": true
+  },
+  "stage_report_sha256": {
+    "validation_report.json": "8aa1ebb351cee6d72c1ca7da0e185ad4ce73f81e8c0d41c0c2d595df2a091f68",
+    "filtered/selection_report.json": "7408c8dd90eb911d2ebe02aeda3da09ec20f404e217c06fc32523ff63b2c66fa",
+    "reviewed/review_report.json": "e4c5a82858d09d906fa23f668851b9e5813796277bd10939817bc0113b3590c9",
+    "splits/split_report.json": "3ead4082bfe8724a5901530c778af0ab86ea081c06407ce380b0fbc95dad6eac",
+    "pilot/pilot_manifest.json": "e9acbded81a04614e2ec6721862b04891d3af74f92fd24ed48b287a9957e7e0c"
+  },
+  "limitations": [
+    "Local data-flow test, not a medical-quality or model-performance evaluation.",
+    "No live Adaption import, augmentation, translation, or inference has run.",
+    "Held-out diabetic-eye coverage remains missing."
+  ]
+}

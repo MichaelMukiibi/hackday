@@ -16,6 +16,8 @@ Run these independent stages from the repository root with Python 3.11 or newer.
 python dataset_pipeline/pipeline.py download
 python dataset_pipeline/pipeline.py validate
 python dataset_pipeline/pipeline.py filter
+python dataset_pipeline/pipeline.py review
+python dataset_pipeline/pipeline.py split
 ```
 
 The download stage saves the unchanged source archive and a manifest. Repeated runs verify and reuse the archive. Validation checks its SHA-256, parses every XML document, and writes file checksums and a count report. See [pipeline instructions](dataset_pipeline/README.md) and [pinned source configuration](dataset_pipeline/source.json).
@@ -47,15 +49,25 @@ The implemented filter applies [versioned topic rules](dataset_pipeline/filter_r
 
 This is a broad candidate pool: rare inherited conditions and country-specific guidance require relevance review. Original source answers remain unreviewed. See [filter documentation and test command](dataset_pipeline/README.md).
 
+### Scope triage and evaluation splits
+
+Automated [scope rules](dataset_pipeline/review_rules.json) retain **280 core candidates**, defer **234 specialist** and **12 location-specific** examples, and flag local-context content for review. All clinical and language review statuses remain unreviewed. The full 526-record review queue is preserved locally.
+
+[Split rules](dataset_pipeline/split_rules.json) keep linked source documents, URL paths, configured topic aliases, identical text, and near-duplicate answers together. Fifty connected groups produce **224 training, 28 validation, and 28 test records**, with no cross-split grouping-key collisions. Translations and paraphrases must inherit their parent's split; only training parents may be augmented.
+
+**Evaluation coverage limitation:** all 22 diabetic-eye records are in one training group. The held-out sets do not establish diabetic-eye performance; independently sourced evaluation cases are needed. Grouping also does not guarantee elimination of all semantic overlap.
+
+See the tracked [scope evidence](docs/evidence/medquad-review-report.json), [split evidence](docs/evidence/medquad-split-report.json), and [stage documentation](dataset_pipeline/README.md). Generated data, review queues, assignments, and reports live under ignored `dataset_pipeline/data/`.
+
 ### Next stages
 
-1. Review topic relevance, source currency, and local applicability of the filtered candidates.
-2. Group related source documents and topics before creating deterministic training and held-out evaluation splits.
+1. Review clinical currency and local applicability of the core candidates and flagged records.
+2. Prepare independently sourced diabetic-eye evaluation cases without using augmented training material.
 3. Prepare a small multilingual pilot with translation provenance and explicit clinical and language review status.
 4. Export selected training records to Adaption for augmentation, then evaluate against the held-out cases.
 5. Add clearly marked synthetic intake, FastDRS tool-use, and specialist-handoff examples separately from source-derived medical Q&A.
 
-Acquisition, structural validation, and topic filtering are implemented. Relevance review, dataset splitting, translation, clinical review, and healthcare augmentation remain planned; these pipeline checks do not establish medical accuracy or model improvement.
+Acquisition, structural validation, topic filtering, automated scope triage, and grouped splitting are implemented. Human relevance review, translation, clinical review, and healthcare augmentation remain planned; these pipeline checks do not establish medical accuracy or model improvement.
 
 ## Historical Adaption practice evidence
 
@@ -124,6 +136,8 @@ The detailed [training plan](docs/TRAINING_PLAN.md) covers provenance, target ex
 | Existing adapted-data export and offline verification | Present |
 | MedQuAD acquisition and structural validation | Implemented and verified locally |
 | Diabetes and eye-health filtering | Implemented; 526 unreviewed candidate QA records |
+| Automated scope triage | Implemented; 280 core candidates and 246 deferred |
+| Grouped train/validation/test split | Implemented; 224 / 28 / 28, with diabetic-eye evaluation gap |
 | Kinyarwanda and Luganda pilot | Planned |
 | Healthcare-specific augmentation | Planned |
 | Clinician-reviewed Kinyarwanda training examples | Planned |

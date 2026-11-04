@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "local_context_title_patterns": ["\\bfinancial help\\b", "\\bamerican indians\\b"],
+  "specialist_title_patterns": ["\\bmonogenic\\b", "\\bneonatal\\b", "\\bmaturity.onset\\b", "\\bdiabetic mastopathy\\b", "\\btype a insulin resistance syndrome\\b"],
+  "specialist_sources": ["GARD", "GHR"],
+  "common_focus_allowlist": ["type 1 diabetes", "diabetes mellitus type 1", "age related macular degeneration", "macular degeneration", "brittle diabetes"],
+  "local_context_content_patterns": ["\\bmedicare\\b", "\\bmedicaid\\b", "\\bunited states\\b", "\\bamerican indians\\b"],
+  "note": "Automated scope triage only. Core means eligible for preparation, not clinical approval. Broad specialist material and location-specific source titles are deferred, not deleted. All clinical and language statuses remain unreviewed."
+}

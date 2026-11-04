@@ -6,6 +6,8 @@ Run from the workspace root with Python 3.11 or newer; no packages are required:
 python dataset_pipeline/pipeline.py download
 python dataset_pipeline/pipeline.py validate
 python dataset_pipeline/pipeline.py filter
+python dataset_pipeline/pipeline.py review
+python dataset_pipeline/pipeline.py split
 ```
 
 `source.json` pins the original MedQuAD Git commit and attribution. Downloading
@@ -63,6 +65,60 @@ Run the synthetic behavioral tests without downloading data:
 python -m unittest discover -s dataset_pipeline -p test_filtering.py
 ```
 
-Next modules: relevance review; document/topic-grouped deterministic splits;
-multilingual pilot generation; Adaption export; and clinical/language review.
-Each module should consume immutable inputs and write separate outputs.
+## Scope triage and grouped splits
+
+`review` consumes the checksum-verified filtered JSONL. Versioned
+`review_rules.json` identifies general diabetes/eye-health candidates, defers
+specialist-source records except explicitly allowed common conditions, and defers
+location-specific titles. Text mentioning Medicare, Medicaid, the United States,
+or American Indians is flagged for local-context review; a flag alone does not
+exclude a whole record. Scope decisions are automated, with reasons attached.
+They do not mark any example clinically reviewed or current.
+
+Review outputs in `data/reviewed/`:
+
+- `scope_review.jsonl`: all 526 candidates with their original provenance and new scope decisions.
+- `review_queue.csv`: IDs, decisions, titles, questions, source URLs, and flags for human review.
+- `review_report.json`: input/config/code checksums and decision counts.
+
+Current scope counts: 280 core candidates, 234 deferred specialist candidates,
+and 12 deferred location-specific candidates. Thirty records have local-context
+content flags. Deferred records remain available for review and are excluded
+from every split. Revisit the versioned rules and rerun downstream stages to
+change scope decisions; arbitrary CSV edits are not ingested as approvals.
+
+`split` consumes checksum-verified review output and `split_rules.json`. It
+creates transitive connected groups using whole source-document paths,
+fragment-free source URL paths (scheme/query ignored), normalized topic titles
+and configured aliases, identical normalized questions or answers, and answer
+5-word-shingle Jaccard similarity of at least 0.85 for answers of 30+ words.
+Similarities are checked before assigning a group, even when links connect
+otherwise different documents. This is not broad disease-family isolation and
+cannot rule out semantic overlap that these rules do not detect.
+
+Largest groups are assigned first to minimize squared deviation from an 80/10/10
+record target; a configured seed resolves size ties. Groups are indivisible,
+so proportions can differ and topic distributions are not stratified. Assignment
+is independent of input record order. All translations and paraphrases must
+inherit their parent ID, group, and split; only training parents may be augmented.
+Adding previously deferred records requires regrouping before use.
+
+Split outputs in `data/splits/`: `train.jsonl`, `validation.jsonl`, `test.jsonl`,
+`groups.json`, `assignment.csv`, and `split_report.json`. Current counts are
+**224 train / 28 validation / 28 test**, across 50 groups; the largest group has
+27 records. No grouping-key collisions cross splits. The report records missing
+held-out topics: all 22 diabetic-eye examples are in one training group, so
+independently sourced diabetic-eye evaluation cases are still needed.
+
+Tracked aggregate evidence is in `docs/evidence/medquad-review-report.json` and
+`docs/evidence/medquad-split-report.json`. Data and review queues stay ignored.
+
+Run all behavioral tests:
+
+```powershell
+python -m unittest discover -b -s dataset_pipeline -p "test_*.py"
+```
+
+Next modules: human scope/current-evidence review; an independently sourced
+diabetic-eye evaluation set; multilingual pilot preparation; Adaption export;
+and clinical/language review. Those modules must preserve split assignments.

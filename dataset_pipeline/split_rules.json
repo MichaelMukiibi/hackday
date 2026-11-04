@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "seed": "ijwicare-medquad-v1",
+  "ratios": {"train": 0.8, "validation": 0.1, "test": 0.1},
+  "answer_near_duplicate_threshold": 0.85,
+  "answer_shingle_words": 5,
+  "answer_minimum_words": 30,
+  "focus_aliases": [
+    {"pattern": "^(?:diabetes type 1|diabetes mellitus type 1|type 1 diabetes)$", "canonical": "type 1 diabetes"},
+    {"pattern": "^(?:diabetes type 2|type 2 diabetes)$", "canonical": "type 2 diabetes"},
+    {"pattern": "^(?:diabetic eye problems|diabetic retinopathy|prevent diabetes problems keep your eyes healthy)$", "canonical": "diabetic eye disease"},
+    {"pattern": "^(?:diabetic kidney problems|diabetic kidney disease|kidney disease of diabetes|prevent diabetes problems keep your kidneys healthy)$", "canonical": "diabetic kidney disease"},
+    {"pattern": "^(?:diabetic nerve problems|diabetic neuropathy|diabetic neuropathies the nerve damage of diabetes|prevent diabetes problems keep your nervous system healthy)$", "canonical": "diabetic neuropathy"},
+    {"pattern": "^(?:age related macular degeneration|macular degeneration)$", "canonical": "macular degeneration"},
+    {"pattern": "^(?:low vision|vision impairment and blindness)$", "canonical": "low vision"}
+  ],
+  "note": "Group entire documents, normalized fragment-free source URLs, canonical focus aliases, identical questions/answers, and near-duplicate answers before assigning groups. Ratios are approximate; groups are indivisible. Not a guarantee of semantic or broad disease-family isolation. Descendant translations/paraphrases must inherit parent split."
+}

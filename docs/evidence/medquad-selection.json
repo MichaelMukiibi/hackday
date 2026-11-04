@@ -1,0 +1,64 @@
+{
+  "source_revision": "577bd37b96c02d1833b2c9eed2de9f96964e96cb",
+  "archive_sha256": "161d948f8ce8f82accca1f5769a512dff2a01af2b3004d48f2b3da2758a38a09",
+  "rules_version": "1.0.0",
+  "rules_sha256": "d723d68304d96829689ff4713a06c9e8de72c57ab7d3e25fac1986521a1b398e",
+  "filter_code_sha256": "1ca7c5a86ce419c350091b65c729ad281faf28fa5e1b0dea2696bacb1841b44f",
+  "input_documents": 11274,
+  "input_qa_pairs": 47441,
+  "matched_documents": 268,
+  "selected_source_documents": 175,
+  "selected_pairs_before_dedup": 553,
+  "unique_records": 526,
+  "decisions": {
+    "duplicate_merged": 27,
+    "missing_question_or_answer": 31034,
+    "outside_topic_scope": 15854,
+    "selected": 526
+  },
+  "topic_counts": {
+    "diabetes": 245,
+    "diabetic_eye_disease": 22,
+    "eye_health": 303,
+    "eye_screening": 0
+  },
+  "question_type_counts": {
+    "causes": 26,
+    "considerations": 20,
+    "exams and tests": 18,
+    "frequency": 23,
+    "genetic changes": 23,
+    "information": 172,
+    "inheritance": 31,
+    "outlook": 1,
+    "prevention": 17,
+    "research": 4,
+    "susceptibility": 21,
+    "symptoms": 106,
+    "treatment": 64
+  },
+  "notes": [
+    "Topic counts overlap; records may have multiple topics.",
+    "Exact normalized QA deduplication only; near duplicates remain for review.",
+    "No clinical or translation review; source text is retained.",
+    "No split, translation, generation, or Adaption job has run."
+  ],
+  "outputs": {
+    "document_inventory.json": {
+      "sha256": "26f51db65c84584bbd2f32a4a2b76645f00c13c7e424de8f3358099c111d6f7f",
+      "bytes": 3577526
+    },
+    "ijwicare_seed.csv": {
+      "sha256": "6166ee607e2807a55303d672399004232b6e2ddb692e0b3af47dba6af8f089e8",
+      "bytes": 1392078
+    },
+    "ijwicare_seed.jsonl": {
+      "sha256": "9f5f9a245915e61db8bef821cf65f5630dab68f0c73bcbf355a382137058b21e",
+      "bytes": 1485336
+    },
+    "selection_audit.jsonl": {
+      "sha256": "35d22087ec16d8684a729beb187dfdb5d97db5622841e0e6de36c3df7e00bfaa",
+      "bytes": 9947118
+    }
+  }
+}

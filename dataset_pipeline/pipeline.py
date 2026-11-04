@@ -92,6 +92,10 @@ def validate():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=["download", "validate"])
+    parser.add_argument("stage", choices=["download", "validate", "filter"])
     args = parser.parse_args()
-    {"download": download, "validate": validate}[args.stage]()
+    if args.stage == "filter":
+        from filtering import run
+        run(HERE, DATA, SOURCE, digest, write_json)
+    else:
+        {"download": download, "validate": validate}[args.stage]()

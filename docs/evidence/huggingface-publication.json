@@ -1,0 +1,41 @@
+{
+  "repo_id": "MichaelMukiibi/ijwicare-medquad-pilot",
+  "repo_type": "dataset",
+  "visibility": "public",
+  "revision": "bb8f503313728b29add15bcba0c090b6abe6c0b9",
+  "url": "https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot",
+  "dataset_file_url": "https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot/resolve/bb8f503313728b29add15bcba0c090b6abe6c0b9/train.csv",
+  "row_count": 10,
+  "pipeline_git_commit": "e0eec967b50c293fbbae6ca743f827f15a4194c7",
+  "column_mapping": {
+    "prompt": "instruction",
+    "completion": "output",
+    "context": [
+      "input"
+    ]
+  },
+  "verified_files": {
+    "LICENSE": {
+      "sha256": "5b63c5abb5f4218f79230730b3733ce681383e2d656044069b8c73cbdb8e7fb7",
+      "bytes": 16391
+    },
+    "README.md": {
+      "sha256": "787abef8862af6b9b68ac90cc61d57ac7b9b3fef3efe78cefafe8974daf6d50a",
+      "bytes": 3962
+    },
+    "manifest.json": {
+      "sha256": "a3434c62f4893c48e6684371ee9788bddd8e164f76a90b1468badfd49e4ebd1c",
+      "bytes": 2273
+    },
+    "provenance.json": {
+      "sha256": "9e55254771b4bdaaec32d27b06633d3c98a23336da3b22f6e14e90e9a4a2ac55",
+      "bytes": 33115
+    },
+    "train.csv": {
+      "sha256": "ceed3fcdfedd36c0404a500caebe84fb69a1c8fcee6c97493408f29e26c3f8f7",
+      "bytes": 15057
+    }
+  },
+  "verification": "All five files fetched anonymously at pinned revision and matched byte-for-byte",
+  "adaption_import_status": "not_run"
+}

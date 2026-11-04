@@ -31,7 +31,10 @@ The pilot uses 4 diabetic-eye, 3 general-diabetes, and 3 other eye-health traini
 parents. Its column mapping is `instruction` -> prompt, `output` -> completion,
 and `input` -> context, following the historical SDK example. Source text is
 retained and all clinical/language review statuses remain unreviewed. The export
-has passed local CSV/JSONL round trips; a live Adaption import is not yet verified.
+has passed local CSV/JSONL round trips and is published on
+[Hugging Face](https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot);
+see the [verified publication receipt](docs/evidence/huggingface-publication.json).
+A live Adaption import is not yet verified.
 
 Smoke checks establish local data-flow integrity, not clinical accuracy,
 translation quality, augmentation quality, or model performance. The next live

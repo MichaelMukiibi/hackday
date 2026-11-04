@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/abachaa/MedQuAD",
+  "revision": "577bd37b96c02d1833b2c9eed2de9f96964e96cb",
+  "archive_url": "https://codeload.github.com/abachaa/MedQuAD/zip/577bd37b96c02d1833b2c9eed2de9f96964e96cb",
+  "license": "CC-BY-4.0",
+  "attribution": "Asma Ben Abacha and Dina Demner-Fushman, A Question-Entailment Approach to Question Answering, BMC Bioinformatics (2019)"
+}

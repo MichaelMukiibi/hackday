@@ -1,10 +1,50 @@
 # Ijwi - Adaption Data Lab
 
-**Adaption Adaptive Data experimentation and the data-customisation roadmap for Ijwi, a Kinyarwanda retinal-screening assistant for Rwanda's community health workers.**
+**Reproducible healthcare dataset preparation and Adaption experimentation for IjwiCare, a retinal-screening assistant for community health workers.**
 
 Built for Build54 Hacktoberfest Hack Day Kigali, October 31, 2026. Companion application: [Ijwi](https://github.com/MichaelMukiibi/ijwi-hack-day).
 
-## Evidence of Adaption use today
+## IjwiCare dataset: MedQuAD
+
+The active healthcare dataset work starts from [MedQuAD](https://github.com/abachaa/MedQuAD). We will select diabetes and eye-health examples, then prepare reviewed Kinyarwanda and Luganda variants and task-specific augmentation in Adaption. The existing Alpaca export below is historical integration evidence; it is not the source for this healthcare dataset.
+
+### Download and validate
+
+Run these independent stages from the repository root with Python 3.11 or newer. The pipeline uses only the Python standard library; it requires no Adaption credentials or credits.
+
+```sh
+python dataset_pipeline/pipeline.py download
+python dataset_pipeline/pipeline.py validate
+```
+
+The download stage saves the unchanged source archive and a manifest. Repeated runs verify and reuse the archive. Validation checks its SHA-256, parses every XML document, and writes file checksums and a count report. See [pipeline instructions](dataset_pipeline/README.md) and [pinned source configuration](dataset_pipeline/source.json).
+
+| Locally verified item | Value |
+| --- | --- |
+| Source commit | `577bd37b96c02d1833b2c9eed2de9f96964e96cb` |
+| Archive size | 16,953,181 bytes (16.95 MB) |
+| Uncompressed file bytes | 36,735,138 bytes (36.74 MB) |
+| XML documents | 11,274 |
+| Question-answer entries | 47,441 |
+| Entries with nonempty answers | 16,407 |
+| Entries without answers | 31,034 |
+| Archive SHA-256 | `161d948f8ce8f82accca1f5769a512dff2a01af2b3004d48f2b3da2758a38a09` |
+
+These are observed counts for the pinned release; the project's advertised total is 47,457. Raw data and generated reports live in ignored `dataset_pipeline/data/` and are regenerated locally. The first download records the observed archive checksum; subsequent runs verify against that local manifest.
+
+MedQuAD is published under **CC BY 4.0**. Attribute Asma Ben Abacha and Dina Demner-Fushman, *A Question-Entailment Approach to Question Answering*, BMC Bioinformatics (2019), retain source provenance, and identify modifications. The original authors removed answers from three MedlinePlus subsets for copyright reasons; the pipeline preserves those omissions and does not fetch replacement answers. See the [original source documentation and license](https://github.com/abachaa/MedQuAD).
+
+### Next stages
+
+1. Filter diabetes and eye-health records using versioned selection rules, retaining original document IDs and source URLs.
+2. Group related source documents and topics before creating deterministic training and held-out evaluation splits.
+3. Prepare a small multilingual pilot with translation provenance and explicit clinical and language review status.
+4. Export selected training records to Adaption for augmentation, then evaluate against the held-out cases.
+5. Add clearly marked synthetic intake, FastDRS tool-use, and specialist-handoff examples separately from source-derived medical Q&A.
+
+Only acquisition and structural validation are implemented. Topic filtering, translation, clinical review, and healthcare augmentation remain planned; structural validation does not establish medical accuracy or model improvement.
+
+## Historical Adaption practice evidence
 
 This repository contains an Adaption SDK workflow and its existing exported practice dataset. The export has been inspected locally; no new paid run was launched while preparing these documents.
 
@@ -69,6 +109,9 @@ The detailed [training plan](docs/TRAINING_PLAN.md) covers provenance, target ex
 | --- | --- |
 | Adaption SDK practice workflow | Present |
 | Existing adapted-data export and offline verification | Present |
+| MedQuAD acquisition and structural validation | Implemented and verified locally |
+| Diabetes and eye-health filtering | Planned |
+| Kinyarwanda and Luganda pilot | Planned |
 | Healthcare-specific augmentation | Planned |
 | Clinician-reviewed Kinyarwanda training examples | Planned |
 | Gemma 4 fine-tuning / AutoScientist training | Planned; supported model must be verified |
@@ -102,4 +145,6 @@ The existing script prints an estimate and then launches adaptation automaticall
 
 ## Repository workflow
 
-Use `feat/<scope>` branches and merge completed changes into local `dev`. The owner pushes the branch. Never commit `.env`, API keys, private patient data, or unreviewed claims of clinical performance.
+Use `doc/<scope>` branches for documentation additions and `feat/<scope>` branches for features and pipeline changes. Merge completed changes into local `dev`, then push `dev` to the remote.
+
+Never commit `.env`, API keys, private patient data, raw dataset downloads, or unreviewed claims of clinical performance.

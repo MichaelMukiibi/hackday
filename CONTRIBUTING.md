@@ -60,8 +60,13 @@ After the local smoke test, run `python dataset_pipeline/prepare_huggingface.py`
 to build the allowlisted ten-row training-only package. It verifies pilot/split
 checksums and preserves the original license and full parent provenance. See
 [publication package details](dataset_pipeline/README.md). The command is offline;
-uploading is a separate operation. Record the Hugging Face revision and verify
-published file hashes before handing the source URL to Adaption.
+uploading is a separate operation. Add `HF_TOKEN` with repository write access to
+the ignored `.env`, then run `uv run --frozen python dataset_pipeline/publish_huggingface.py`
+for preflight, or add `--publish` to upload and verify the pinned revision.
+If the pinned Python 3.13 runtime is unavailable, select an installed compatible
+interpreter explicitly, for example `uv run --frozen --python 3.14 python ...`.
+Record the returned receipt under `docs/evidence/` before handing the source URL
+to Adaption. Never commit the `.env` or token.
 
 ## Verification
 

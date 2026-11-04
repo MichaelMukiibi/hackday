@@ -34,6 +34,15 @@ Clinical and language review remain pending. All 22 diabetic-eye examples belong
 to one training group, so the held-out sets do not measure diabetic-eye performance.
 A local smoke pass establishes data-flow integrity, not medical or model quality.
 
+## Published English pilot
+
+[MichaelMukiibi/ijwicare-medquad-pilot](https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot)
+is public with ten English training rows, the dataset card, original license,
+provenance, and checksum manifest. All five published files were fetched
+anonymously at revision `bb8f503313728b29add15bcba0c090b6abe6c0b9` and matched
+the local package byte-for-byte. See the [publication receipt](docs/evidence/huggingface-publication.json)
+for the pinned CSV URL and column mapping. Adaption import remains the next check.
+
 ## Documentation
 
 - [Architecture](ARCHITECTURE.md): stages, provenance, dataset counts, integration boundaries, and roadmap.

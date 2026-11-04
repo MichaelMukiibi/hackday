@@ -184,3 +184,27 @@ the packaging script. Upload only these five files to the Hugging Face dataset
 repository, then record its exact commit and verify its published file hashes.
 Packaging itself does not create repositories, upload, read credentials, or run
 Adaption jobs.
+
+### Programmatic publishing
+
+The public pilot repository is
+[MichaelMukiibi/ijwicare-medquad-pilot](https://huggingface.co/datasets/MichaelMukiibi/ijwicare-medquad-pilot).
+Set `HF_TOKEN` in the ignored repository-root `.env` file to a token with write
+access to that repository. Do not paste or log the token. The uploader loads it
+through python-dotenv and the official Hugging Face client.
+
+```powershell
+uv sync --frozen
+# Check the package and authenticated account without uploading:
+uv run --frozen python dataset_pipeline/publish_huggingface.py
+# Explicitly upload and verify the published revision:
+uv run --frozen python dataset_pipeline/publish_huggingface.py --publish
+```
+
+The uploader accepts only the five package files, checks all hashes and parent
+records, verifies the account owner, and uploads one commit with a parent-revision
+guard. Existing matching contents are reused. It neither changes repository
+visibility nor deletes remote files. After upload it fetches all five files
+anonymously at the returned commit and compares their bytes. A receipt with the
+pinned CSV URL is written to ignored `data/huggingface-publication.json`.
+No Adaption import or credit-consuming job is launched by this command.
